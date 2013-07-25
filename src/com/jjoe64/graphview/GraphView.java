@@ -107,8 +107,14 @@ abstract public class GraphView extends LinearLayout {
 
 			if (maxY == minY) {
 				// if min/max is the same, fake it so that we can render a line
-				maxY = maxY*1.05d;
-				minY = minY*0.95d;
+				if(maxY == 0) {
+					// if both are zero, change the values to prevent division by zero
+					maxY = 1.0d;
+					minY = 0.0d;
+				} else {
+					maxY = maxY*1.05d;
+					minY = minY*0.95d;
+				}
 			}
 
 			double diffY = maxY - minY;
@@ -254,7 +260,7 @@ abstract public class GraphView extends LinearLayout {
 	private double manualMaxYValue;
 	private double manualMinYValue;
 	private GraphViewStyle graphViewStyle;
-	private GraphViewContentView graphViewContentView;
+	private final GraphViewContentView graphViewContentView;
 
 	public GraphView(Context context, AttributeSet attrs) {
 		this(context, attrs.getAttributeValue(null, "title"));
@@ -295,7 +301,11 @@ abstract public class GraphView extends LinearLayout {
 
 	public void setGraphViewStyle(GraphViewStyle style) {
 		graphViewStyle = style;
-	}
+    }
+
+    public void setTitle(String title) {
+      this.title = title;
+    }
 
 	private GraphViewData[] _values(int idxSeries) {
 		GraphViewData[] values = graphSeries.get(idxSeries).values;
@@ -410,8 +420,14 @@ abstract public class GraphView extends LinearLayout {
 		double max = getMaxY();
 		if (max == min) {
 			// if min/max is the same, fake it so that we can render a line
-			max = max*1.05d;
-			min = min*0.95d;
+			if(max == 0) {
+				// if both are zero, change the values to prevent division by zero
+				max = 1.0d;
+				min = 0.0d;
+			} else {
+				max = max*1.05d;
+				min = min*0.95d;
+			}
 		}
 
 		for (int i=0; i<=numLabels; i++) {
@@ -667,7 +683,7 @@ abstract public class GraphView extends LinearLayout {
 	 * The user can disable any touch gestures, this is useful if you are using a real time graph, but don't want the user to interact
 	 * @param disableTouch
 	 */
-	public void setDiscableTouch(boolean disableTouch) {
+	public void setDisableTouch(boolean disableTouch) {
 		this.disableTouch = disableTouch;
 	}
 
